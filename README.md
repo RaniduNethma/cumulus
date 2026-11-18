@@ -68,7 +68,7 @@ This is for installation for Cumulus development. See the [Cumulus deployment se
 
 ### Prerequisites
 
-- [NVM](https://github.com/creationix/nvm) and node version ~22.21.1
+- [NVM](https://github.com/creationix/nvm) and node version ~22.23.4
 - [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 - Bash
 - [Docker](https://www.docker.com/) (only required for testing)
@@ -164,11 +164,9 @@ See the [API package documentation](packages/api/README.md#running-the-api-local
 
 #### LocalStack
 
-[LocalStack](https://github.com/localstack/localstack) provides local versions of most AWS services for testing.
+[MiniStack](https://ministack.org) provides a free, open-source local alternative to AWS services for testing and local development.
 
-The LocalStack repository has [installation instructions](https://github.com/localstack/localstack#installing).
-
-Localstack is included in the docker-compose file. You only need to run the docker-compose command in the next section in order to use it with your tests.
+MiniStack is included in the Docker Compose file along with other local services. You only need to run the command in the next section to start it for your tests.
 
 #### Docker containers
 
@@ -178,7 +176,7 @@ Turn on the docker containers first:
 npm run start-unit-test-stack
 ```
 
-Stop localstack/unit test services:
+Stop unit test services:
 
 ```sh
 npm run stop-unit-test-stack

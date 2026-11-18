@@ -57,7 +57,7 @@ First, copy the tag you created for DockerHub with the name of the image that
 is expected for ECR:
 
 ```shell
-docker tag cumuluss/async-operation:<build-number> <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/async_operations:<build-number>
+docker tag cumuluss/async-operation:<build-number> <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/async_operations:<build-number>
 ```
 
 Then you will need to follow the [AWS documentation to log in to ECR for your account from the command line](https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html#cli-authenticate-registry).
@@ -65,7 +65,7 @@ Then you will need to follow the [AWS documentation to log in to ECR for your ac
 Lastly, you can push the image to ECR in the AWS account:
 
 ```shell
-docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/async_operations:<build-number>
+docker push <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/async_operations:<build-number>
 ```
 
 ## Updating the Cumulus deployment configuration
@@ -75,3 +75,14 @@ This step should also be done as part of the release process. Once you have buil
 to match the new `<build-number>`.
 
 You should also update the `async_operation_image_version` in [`variables.tf` for our example Cumulus deployment](../../../../example/cumulus-tf/variables.tf) that is used to pull the images from ECR.
+
+## Async Operation Statuses
+Async Operations have a status that is output and stored in the Postgres database and can be viewed there or via the Cumulus Dashboard.  These status are as follows:
+
+`RUNNER_FAILED`: Occurs if the parent ECS runner erors out due to a failure to fetch the lambda function or the ECS runner failed to fetch or delete the lambda payload.
+
+`RUNNING`: Occurs when an ECS async operation was successfully started.
+
+`SUCCEEDED`: Occurs whenever a the lambda task completes regardless of lambda task output.  This can occur even if the output of the lambda contains error messages that were output gracefully by the lambda task, like if a bulk operation coplete with errors in the output.  The wrapper completed execution and the 'SUCCEEDED' status is written.
+
+`TASK_FAILED` : When the lambda task being run inside the ECS task errors out, or a failure occurs from parsing the lambda payload.
